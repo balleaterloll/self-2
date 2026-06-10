@@ -1413,6 +1413,7 @@ async def stopall(ctx):
     gcnc_active = False
     profilenc_active = False
     fullnc_active = False
+    glitchednc_active = False
 
     # Force stop all loops
     changing_gcs.clear()
@@ -1470,6 +1471,52 @@ async def stopfullnc(ctx):
     global fullnc_active
     fullnc_active = False
     await ctx.send("> **✅ Full NC Stopped Successfully**", delete_after=5)
+glitchednc_active = False
 
+@bot.command(aliases=['gnc'])
+async def glitchednc(ctx, *, target: str = None):
+    await ctx.message.delete()
+    if not target:
+        await ctx.send("> **[ERROR]**: `.glitchednc <target>`", delete_after=5)
+        return
+
+    global glitchednc_active
+    glitchednc_active = True
+
+    await ctx.send(f"> **GLITCHED NC STARTED** for `{target}`", delete_after=5)
+
+    glitch = "𒐫"
+    moons = ["🌑", "🌒", "🌓", "🌔", "🌕", "🌖", "🌗", "🌘"]   # sahi order
+
+    try:
+        while glitchednc_active:
+            for moon in moons:
+                if not glitchednc_active:
+                    break
+                
+                # Heavy Glitch Effect
+                name = f"{target} N0ag ƦƝƊƳƘɆ {glitch*40} {target} N0ag ƦƝƊƳƘɆ {moon}"
+                
+                try:
+                    await ctx.channel.edit(name=name)
+                    await asyncio.sleep(0.32)   # fast but stable
+                except discord.HTTPException as e:
+                    if e.status == 429:
+                        await asyncio.sleep(e.retry_after or 1.2)
+                    else:
+                        await asyncio.sleep(0.45)
+    except:
+        pass
+    finally:
+        glitchednc_active = False
+
+
+@bot.command(aliases=['stopgnc'])
+async def stopglitchednc(ctx):
+    await ctx.message.delete()
+    global glitchednc_active
+    glitchednc_active = False
+    await ctx.send("> **✅ Glitched NC Stopped**", delete_after=5)
+    
 bot.run(token)
 
